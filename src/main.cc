@@ -796,7 +796,7 @@ int main () {
     cell_map.load_library("lib/mc/test_lib.json");
 
     CellGraph* cell_graph = new CellGraph();
-    cell_graph->parse_netlist((std::string) "/mnt/c/git/MC-APR/test.json", cell_map);
+    cell_graph->parse_netlist((std::string) "test.json", cell_map);
 
     CellPlacement* cell_placement = new CellPlacement(cell_graph->get_netlist());
     cell_placement->place(cell_map["FILL"]);

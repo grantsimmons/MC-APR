@@ -1,7 +1,6 @@
 #ifndef NET_H
 #define NET_H
 
-#include <iostream>
 #include <vector>
 
 #include "CellUnit.h"

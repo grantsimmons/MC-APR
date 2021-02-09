@@ -1,17 +1,8 @@
 #ifndef SUBVECTOR_H
 #define SUBVECTOR_H
 
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-#include <unordered_map>
-#include <map>
-#include <math.h>
-#include <deque>
-#include <list>
+#include <list> //Need some sort of library for iterator types and size_t??
+
 template <typename T>
 
 class SubVector {

@@ -1,6 +1,8 @@
 #include "CellPlacement.h"
 
 #include <iostream>
+#include <iomanip>
+#include <math.h>
 #include <string>
 #include <deque>
 #include <unordered_map>

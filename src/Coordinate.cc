@@ -1,5 +1,7 @@
 #include "Coordinate.h"
 
+#include <iostream>
+
 Coordinate::Coordinate(int x, int z) : x(x), z(z) {
 
 }

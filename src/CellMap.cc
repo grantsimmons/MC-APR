@@ -1,5 +1,9 @@
 #include "CellMap.h"
 
+#include <iostream>
+#include <fstream>
+#include <vector>
+
 CellMap::CellMap() {
 }
 

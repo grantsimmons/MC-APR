@@ -1,5 +1,6 @@
 #include "CellUnit.h"
 
+#include <iostream>
 #include <iomanip>
 
 CellUnit::CellUnit() {

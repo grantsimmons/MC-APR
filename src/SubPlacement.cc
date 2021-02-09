@@ -1,5 +1,8 @@
 #include "SubPlacement.h"
 
+#include <iostream>
+#include <iomanip>
+
 //SubPlacement(std::vector<std::vector<CellUnit*>>& vec, Coordinate coord_ll, Coordinate coord_ur, int last_split_direction) : coord_ll(coord_ll), coord_ur(coord_ur), last_split_direction(last_split_direction) {
 //    sub_placement.resize((coord_ur.z - coord_ll.z), SubVector<std::vector<CellUnit*>>(vec[0].begin()+coord_ll.x, vec[0].begin()+coord_ur.x));
 //    for (std::size_t i = 0; i < (coord_ur.z - coord_ll.z); i++) {

@@ -1,7 +1,7 @@
 CXX = g++
 CFLAGS = -std=c++17
 CFILES = src/main.cc
-COBJS = LibraryCell CellUnit CellGraph CellMap Net Coordinate SubVector SubPlacement CellPlacement
+COBJS = LibraryCell CellUnit CellGraph CellMap Net Coordinate SubPlacement CellPlacement
 OUT = run
 INCLUDE = include
 OBJDIR = obj

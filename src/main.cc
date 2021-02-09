@@ -1,23 +1,8 @@
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-#include <unordered_map>
-#include <map>
-#include <math.h>
-#include <deque>
-#include <list>
-
-#include <json.hpp>
-
 #include <string>
 
 #include "CellMap.h"
 #include "CellGraph.h"
 #include "CellPlacement.h"
-#include "CellUnit.h"
 
 int main () {
     CellMap cell_map;

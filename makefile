@@ -6,7 +6,7 @@ OUT = run
 INCLUDE = include
 OBJDIR = obj
 
-.PHONY: build clean app
+.PHONY: build clean app_only
 
 build: $(OBJDIR) $(OUT)
 

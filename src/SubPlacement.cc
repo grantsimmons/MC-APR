@@ -41,7 +41,7 @@ void SubPlacement::print_sub_placement() {
 	std::cout << this->horizontal_size() << std::endl;
 	std::cout << "Vertical Size: ";
 	std::cout << this->vertical_size() << std::endl;
-	std::cout << "Last split direction: " << this->last_split_direction << std::endl;
+	std::cout << "Last split direction: " << (this->last_split_direction ? "Vertical" : "Horizontal") << std::endl;
 	for (auto& row : sub_placement) {
 		for (auto& cell : row) {
 			if (cell != nullptr) {

@@ -11,6 +11,7 @@ int main () {
 
     CellGraph* cell_graph = new CellGraph();
     cell_graph->parse_netlist((std::string) "small_test.json", cell_map);
+    cell_graph->print_netlist();
 
     CellPlacement* cell_placement = new CellPlacement(cell_graph->get_netlist(), 4, 2);
     cell_placement->place(cell_map["FILL"]);

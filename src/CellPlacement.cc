@@ -110,10 +110,10 @@ void CellPlacement::swap(auto& cell1, auto& cell2) {
 }
 
 std::pair<SubPlacement*, SubPlacement*> CellPlacement::split(SubPlacement* sub_placement) { 
-	//std::cout << "Splitting Sub Placement" << std::endl;
 	// direction: 0 = horizontal, 1 = vertical
 	if (sub_placement->last_split_direction == 0) { //Last split horizontally
 		if (sub_placement->horizontal_size() > 1) {
+            std::cout << "Splitting Sub Placement Vertically" << std::endl;
 			//Vertical Split
 			std::string left_partition_id = std::to_string(sub_placement->coord_ll.x) + std::to_string(sub_placement->coord_ll.z) + std::to_string((sub_placement->coord_ll.x + sub_placement->coord_ur.x)/2) + std::to_string(sub_placement->coord_ur.z);
 			SubPlacement* left = new SubPlacement(placement, {sub_placement->coord_ll.x,sub_placement->coord_ll.z}, {(sub_placement->coord_ll.x + sub_placement->coord_ur.x)/2,sub_placement->coord_ur.z}, 1, left_partition_id);
@@ -124,6 +124,7 @@ std::pair<SubPlacement*, SubPlacement*> CellPlacement::split(SubPlacement* sub_p
 			return (std::pair<SubPlacement*, SubPlacement*>) {left, right};
 		}
 		else if (sub_placement->vertical_size() > 1) {
+            std::cout << "Splitting Sub Placement Horizontally" << std::endl;
 			//Resort to horizontal split
 			std::string low_partition_id = std::to_string(sub_placement->coord_ll.x) + std::to_string(sub_placement->coord_ll.z) + std::to_string(sub_placement->coord_ur.x) + std::to_string((sub_placement->coord_ll.z+sub_placement->coord_ur.z)/2);
 			SubPlacement* low = new SubPlacement(placement, {sub_placement->coord_ll.x,sub_placement->coord_ll.z}, {sub_placement->coord_ur.x,(sub_placement->coord_ll.z+sub_placement->coord_ur.z)/2}, 0, low_partition_id);
@@ -145,6 +146,7 @@ std::pair<SubPlacement*, SubPlacement*> CellPlacement::split(SubPlacement* sub_p
 	}
 	else if (sub_placement->last_split_direction == 1) { //Last split vertically
 		if (sub_placement->vertical_size() > 1) {
+            std::cout << "Splitting Sub Placement Horizontally" << std::endl;
 			//Horizontal split
 			std::string low_partition_id = std::to_string(sub_placement->coord_ll.x) + std::to_string(sub_placement->coord_ll.z) + std::to_string(sub_placement->coord_ur.x) + std::to_string((sub_placement->coord_ll.z+sub_placement->coord_ur.z)/2);
 			SubPlacement* low = new SubPlacement(placement, {sub_placement->coord_ll.x,sub_placement->coord_ll.z}, {sub_placement->coord_ur.x,(sub_placement->coord_ll.z+sub_placement->coord_ur.z)/2}, 0, low_partition_id);
@@ -155,6 +157,7 @@ std::pair<SubPlacement*, SubPlacement*> CellPlacement::split(SubPlacement* sub_p
 			return (std::pair<SubPlacement*, SubPlacement*>) {low, high};
 		}
 		else if (sub_placement->vertical_size() > 1) {
+            std::cout << "Splitting Sub Placement Vertically" << std::endl;
 			//Resort to vertical split
 			std::string left_partition_id = std::to_string(sub_placement->coord_ll.x) + std::to_string(sub_placement->coord_ll.z) + std::to_string((sub_placement->coord_ll.x + sub_placement->coord_ur.x)/2) + std::to_string(sub_placement->coord_ur.z);
 			SubPlacement* left = new SubPlacement(placement, {sub_placement->coord_ll.x,sub_placement->coord_ll.z}, {(sub_placement->coord_ll.x + sub_placement->coord_ur.x)/2,sub_placement->coord_ur.z}, 1, left_partition_id);
@@ -215,11 +218,12 @@ std::pair<SubPlacement*, SubPlacement*> CellPlacement::run_kl(SubPlacement* in) 
 						if (connected_cell->partition_id == other_partition_id) {
 							cut_cost++;
 						}
-						else if (connected_cell->partition_id == this_partition_id) { //FIXME: Is this right?
+						else if (connected_cell->partition_id == this_partition_id && connected_cell != cell) { //FIXME: Is this right?
 							cut_cost--;
 						}
 					}
 				}
+                std::cout << "Cut cost for " << cell->get_cell_name() << ": " << cut_cost << " (Partition ID: " << this_partition_id << ")" << std::endl;
 				cell_costs[this_partition_id].push_back({coord,cut_cost});
 				if (cut_cost > 0) {
 					swap_candidates[this_partition_id].push_back({coord,cut_cost});
@@ -275,13 +279,16 @@ void CellPlacement::refine_placement() {
 	std::deque<SubPlacement*> sp_queue;
 	std::deque<SubPlacement*> final_queue; //Remove later, only for testing
 
-	SubPlacement* top = new SubPlacement(placement, {0,0}, {placement_x_max, placement_z_max}, 0, std::to_string(0));
+	SubPlacement* top = new SubPlacement(placement, {0,0}, {placement_x_max, placement_z_max}, 1, std::to_string(0));
 
+    std::cout << "Seeding SubPlacement Queue with top" << std::endl;
 	sp_queue.push_back(top); //Seed sub_placement queue
 
 	//Queue handler
 	while(!sp_queue.empty()) {
 		SubPlacement* curr_sp = sp_queue.front();
+        std::cout << "Evaluating SubPlacement " << curr_sp->partition_id;
+        curr_sp->print_sub_placement();
 
 		auto[part1, part2] = run_kl(curr_sp); //Run KL Logic
 

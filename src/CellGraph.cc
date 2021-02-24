@@ -81,6 +81,7 @@ std::vector<CellUnit*>& CellGraph::get_netlist() {
 }
 
 void CellGraph::print_netlist() {
+    std::cout << "Netlist info:" << std::endl;
 	for (auto& it : internal_netlist) {
 		it->print_attributes();
 	}

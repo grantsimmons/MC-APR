@@ -31,7 +31,7 @@ class CellPlacement {
 
         CellPlacement(std::vector<CellUnit*>& netlist);
 
-        //CellPlacement(auto& netlist, unsigned int placement_x_max, unsigned int placement_z_max);
+        CellPlacement(std::vector<CellUnit*>& netlist, unsigned int placement_x_max, unsigned int placement_z_max);
 
         void place(LibraryCell* fill_cell);
 

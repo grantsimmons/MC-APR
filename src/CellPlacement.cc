@@ -14,12 +14,12 @@ CellPlacement::CellPlacement(std::vector<CellUnit*>& netlist) :
 		this->placement.resize(placement_z_max, std::vector<CellUnit*>(placement_x_max, nullptr));
 }
 
-//CellPlacement::CellPlacement(auto& netlist, unsigned int placement_x_max, unsigned int placement_z_max) :
-//	netlist(netlist), 
-//	placement_x_max(placement_x_max), 
-//	placement_z_max(placement_z_max) {
-//		this->placement.resize(placement_z_max, std::vector<CellUnit*>(placement_x_max, nullptr));
-//}
+CellPlacement::CellPlacement(std::vector<CellUnit*>& netlist, unsigned int placement_x_max, unsigned int placement_z_max) :
+	netlist(netlist), 
+    placement_x_max(placement_x_max), 
+	placement_z_max(placement_z_max) {
+	this->placement.resize(placement_z_max, std::vector<CellUnit*>(placement_x_max, nullptr));
+}
 
 void CellPlacement::place(LibraryCell* fill_cell) {
 	initial_placement();
@@ -77,7 +77,7 @@ void CellPlacement::initial_placement() {
 		if (curr_x == placement_x_max) {
 			curr_x = 0;
 			curr_z++;
-			if (curr_z == placement_z_max) {
+			if (curr_z > placement_z_max) {
 				std::cout << "ERROR: Ran out of room in initial placement. Expand the allowed placement grid" << std::endl;
 				exit(1);
 				//if (cell != placement.end()) {

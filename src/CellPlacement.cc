@@ -190,7 +190,8 @@ std::pair<SubPlacement*, SubPlacement*> CellPlacement::run_kl(SubPlacement* in) 
 		//Perform KL Algorithm on two subregions
 		std::string partition_id_1 = part1->partition_id;
 		std::string partition_id_2 = part2->partition_id;
-		std::unordered_map<std::string, std::list<CoordCost>> cell_costs, swap_candidates;
+	 	//std::unordered_map<std::string, std::list<CoordCost>> cell_costs, swap_candidates;
+        std::unordered_map<std::string, std::list<CellCost>> new_cell_costs, new_swap_candidates;
 
 		//Calculate cost of initial cut
 		for (int z = 0; z < in->vertical_size(); z++) {
@@ -211,6 +212,7 @@ std::pair<SubPlacement*, SubPlacement*> CellPlacement::run_kl(SubPlacement* in) 
 					exit(1);
 				}
 
+                //Calculate cut cost for the cell
 				int cut_cost = 0;
 
 				for (auto& net : cell->flat_nets) {
@@ -218,42 +220,59 @@ std::pair<SubPlacement*, SubPlacement*> CellPlacement::run_kl(SubPlacement* in) 
 						if (connected_cell->partition_id == other_partition_id) {
 							cut_cost++;
 						}
-						else if (connected_cell->partition_id == this_partition_id && connected_cell != cell) { //FIXME: Is this right?
+						else if (connected_cell->partition_id == this_partition_id && connected_cell != cell) {
 							cut_cost--;
 						}
 					}
 				}
-                std::cout << "Cut cost for " << cell->get_cell_name() << ": " << cut_cost << " (Partition ID: " << this_partition_id << ")" << std::endl;
-				cell_costs[this_partition_id].push_back({coord,cut_cost});
-				if (cut_cost > 0) {
-					swap_candidates[this_partition_id].push_back({coord,cut_cost});
+                //std::cout << "Cut cost for " << cell->get_cell_name() << ": " << cut_cost << " (Partition ID: " << this_partition_id << ")" << std::endl;
+				//cell_costs[this_partition_id].push_back({coord,cut_cost});
+                new_cell_costs[this_partition_id].push_back({cell,cut_cost});
+				if (cut_cost >= 0) { //FIXME: This may break the alg
+					//swap_candidates[this_partition_id].push_back({coord,cut_cost});
+                    new_swap_candidates[this_partition_id].push_back({cell,cut_cost});
 				}
 			}
 		}
+
+        //Calculate max gain
+
+        //Find gain from two cells (cost1 + cost2 - 2*connection_weight)
+        for (auto& cellcost_1 : new_swap_candidates[partition_id_1]) {
+            for (auto& cellcost_2 : new_swap_candidates[partition_id_2]) {
+                int delta_gain = cellcost_1.cost + cellcost_2.cost;
+                //delta_gain -= (cellcost_1.cell->get_connected_nets());
+                std::cout << "Delta Gain: " << delta_gain << std::endl;
+            }
+        }
+            //Iterate cell_costs for part 1 and part 2
+            //Add weights
+            //Subtract connection weight
+
 
 		//std::unordered_map<std::string, CoordCost*> max;
-		std::unordered_map<std::string, CoordCost> max;
+		//std::unordered_map<std::string, CoordCost> max;
 
-		for (auto& part : swap_candidates) { //Iterate Map
-			std::cout << "Swap candidates for ";
-			std::cout << part.first << std::endl;
-			for (auto& coordcost : part.second) { //Iterate List
-				if (max.find(part.first) == max.end()) {
-					//Part ID not found
-					max[part.first] = coordcost;
-				} 
-				else {
-					//Part ID found
-					if (coordcost.cost > max[part.first].cost) {
-						max[part.first] = coordcost;
-						std::cout << "New Max = " << coordcost.cost << std::endl;
-					}
-				}
-				std::cout << "Cell: ";
-				std::cout << in->get(coordcost.coord)->get_cell_name() << std::endl;
-				std::cout << "  Cut Cost: " << coordcost.cost << std::endl;
-			}
-		}
+		//for (auto& part : swap_candidates) { //Iterate Map
+		//	std::cout << "Swap candidates for ";
+		//	std::cout << part.first << std::endl;
+		//	for (auto& coordcost : part.second) { //Iterate List
+		//		if (max.find(part.first) == max.end()) {
+		//			//Part ID not found
+		//			max[part.first] = coordcost;
+		//		} 
+		//		else {
+		//			//Part ID found
+		//			if (coordcost.cost > max[part.first].cost) {
+		//				max[part.first] = coordcost;
+		//				std::cout << "New Max = " << coordcost.cost << std::endl;
+		//			}
+		//		}
+		//		std::cout << "Cell: ";
+		//		std::cout << in->get(coordcost.coord)->get_cell_name() << std::endl;
+		//		std::cout << "  Cut Cost: " << coordcost.cost << std::endl;
+		//	}
+		//}
 
 		//int correction_factor = 0;
 
@@ -287,10 +306,10 @@ void CellPlacement::refine_placement() {
 	//Queue handler
 	while(!sp_queue.empty()) {
 		SubPlacement* curr_sp = sp_queue.front();
-        std::cout << "Evaluating SubPlacement " << curr_sp->partition_id;
-        curr_sp->print_sub_placement();
+        //std::cout << "Evaluating SubPlacement " << curr_sp->partition_id;
+        //curr_sp->print_sub_placement();
 
-		auto[part1, part2] = run_kl(curr_sp); //Run KL Logic
+		auto[part1, part2] = run_kl(curr_sp); //Run KL logic here
 
 		if (part1 == nullptr && part2 == nullptr) {
 			final_queue.push_front(part1);

@@ -10,10 +10,12 @@ int main () {
     cell_map.load_library("lib/mc/debug.json");
 
     CellGraph* cell_graph = new CellGraph();
+    //cell_graph->parse_netlist((std::string) "test.json", cell_map);
     cell_graph->parse_netlist((std::string) "small_test.json", cell_map);
-    cell_graph->print_netlist();
+    cell_graph->print_netlist(); //Broken
 
     CellPlacement* cell_placement = new CellPlacement(cell_graph->get_netlist(), 4, 2);
+    //CellPlacement* cell_placement = new CellPlacement(cell_graph->get_netlist());
     cell_placement->place(cell_map["FILL"]);
     //cell_graph->print_netlist();
 

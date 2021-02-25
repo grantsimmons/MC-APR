@@ -18,6 +18,14 @@ class CellPlacement {
 
         std::vector< std::vector<int> > flat_placement;
 
+        struct CellCost {
+            CellUnit* cell;
+            int cost;
+            CellCost(CellUnit* cell, int cost) : cell(cell), cost(cost){
+            }
+            CellCost() {
+            }
+        };
         struct CoordCost {
             Coordinate coord;
             int cost;
